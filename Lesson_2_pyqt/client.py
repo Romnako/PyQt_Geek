@@ -4,11 +4,13 @@ import time
 import re
 import logging
 import threading
+import socket
+import Lesson_2_pyqt.logs.config_client_log
+from Lesson_2_pyqt.logs.decoration_log import log
 from Lesson_2_pyqt.lib.variables import *
 from Lesson_2_pyqt.lib.utils import server_settings, get_message, send_message
 from Lesson_2_pyqt.lib.errors import ReqFieldMissingError, ServerError, IncorrectDataReceivedError
 from Lesson_2_pyqt.lib.metaclasses import ClientMaker
-import socket
 
 CLIENT_LOGGER = logging.getLogger('client')
 
@@ -114,6 +116,11 @@ class ClientReader(threading.Thread, metaclass=ClientMaker):
                     and MSG_TEXT in message and message[DESTINATION] == self.account_name:
                     print(f'Message received from user {message[SENDER]}:{message[MSG_TEXT]}')
                     CLIENT_LOGGER.info(f'Message received from user {message[SENDER]}:{message[MSG_TEXT]}')
+                elif ACTION in message and message[ACTION] == WHO and SENDER in message \
+                        and DESTINATION in message and MSG_TEXT in message and message[
+                    DESTINATION] == self.account_name:
+                    print(f'Message from user {message[SENDER]}:\n{message[MSG_TEXT]}')
+                    CLIENT_LOGGER.info(f'Message from user {message[SENDER]}:\n{message[MSG_TEXT]}')
                 else:
                     CLIENT_LOGGER.error(f'Invalid message received from server: {message}')
             except IncorrectDataReceivedError:
@@ -188,6 +195,7 @@ def start_client():
     server_port = srv_settings[1]
     client_listen = srv_settings[2]
     print(f'Start client on: {server_address}:{server_port}')
+    CLIENT_LOGGER.info(f'Start client on: {server_address}:{server_port}')
 
     try:
         transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

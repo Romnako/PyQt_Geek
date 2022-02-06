@@ -1,6 +1,8 @@
 import sys
 import logging
 import inspect
+import Lesson_2_pyqt.logs.config_client_log
+import Lesson_2_pyqt.logs.config_server_log
 
 
 if sys.argv[0].rfind('server') > 0:

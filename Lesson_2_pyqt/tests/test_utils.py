@@ -41,6 +41,7 @@ class TestSocket:
         :return: encoding data
         '''
         json_test_messsage = json.dumps(self, max_len)
+        self.max_len = max_len
         return json_test_messsage.encode(ENCODING)
 
 

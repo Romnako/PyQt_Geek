@@ -28,8 +28,8 @@ class ServerMaker(type):
                     elif res_el.opname =='LOAD_ATTR':
                         if res_el.argval not in attributes:
                             attributes.append(res_el.argval)
-        print(f'attributes={attributes}')
-        print(f'methods={methods}')
+        # print(f'attributes={attributes}')
+        # print(f'methods={methods}')
 
         if connect.lower() in methods:
             raise TypeError("Server class cannot use 'connect' method")

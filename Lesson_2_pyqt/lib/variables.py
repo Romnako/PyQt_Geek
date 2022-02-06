@@ -5,7 +5,9 @@ DEFAULT_IP = '127.0.0.1'
 MAX_CONNECTIONS = 5
 PACKAGE_LENGHT = 1024
 ENCODING = 'utf-8'
-SERVER_TIMEOUT = 1
+SERVER_TIMEOUT = 1/2
+
+SERVER_DATABASE = 'sqlite:///server_db.db3'
 
 # Protocol JIM
 ACTION = 'action'
