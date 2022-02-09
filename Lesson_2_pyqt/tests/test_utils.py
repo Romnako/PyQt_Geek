@@ -40,8 +40,8 @@ class TestSocket:
         :param max_len: Getting data from a socket
         :return: encoding data
         '''
-        json_test_messsage = json.dumps(self, max_len)
         self.max_len = max_len
+        json_test_messsage = json.dumps(self, max_len)
         return json_test_messsage.encode(ENCODING)
 
 

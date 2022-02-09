@@ -1,10 +1,9 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData,ForeignKey,DateTime
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime
 from sqlalchemy.orm import mapper, sessionmaker
 from Lesson_2_pyqt.lib.variables import *
 import datetime
-import Lesson_2_pyqt.logs.config_server_log
+from Lesson_2_pyqt.logs import *
 
-SERVER_LOGGER = logging.getLogger('server')
 
 
 class ServerStorage:
@@ -21,6 +20,7 @@ class ServerStorage:
             self.ip_address = ip_address
             self.ip_port = ip_port
             self.login_time = login_time
+            # self.users_login = users_login
             self.id = None
 
 
@@ -51,7 +51,8 @@ class ServerStorage:
 
     def __init__(self):
         # Creating a database engine
-        self.database_engine = create_engine(SERVER_DATABASE, echo=False, pool_recycle=3600)
+        self.database_engine = create_engine(f'sqlite:///{path}', echo=False, pool_recycle=7200,
+                                             connect_args={'check_same_thread': False})
         self.metadata =MetaData()
 
         # Create users table
@@ -79,12 +80,29 @@ class ServerStorage:
                                    Column('ip_port', String)
                                    )
 
+        # Create table contact user
+        contacts = Table('Contacts', self.metadata,
+                         Column('id', Integer, primary_key=True),
+                         Column('user', ForeignKey('Users.id')),
+                         Column('contact', ForeignKey('Users.id'))
+                         )
+
+        # Create table history users
+        users_history_table = Table('History', self.metadata,
+                                    Column('id', Integer, primary_key=True),
+                                    Column('user', ForeignKey('Users.id')),
+                                    Column('sent', Integer),
+                                    Column('accepted', Integer)
+                                    )
+
         #Create tables
         self.metadata.create_all(self.database_engine)
 
         mapper(self.AllUsers, all_users_table)
         mapper(self.OnLineUsers, online_users_table)
         mapper(self.LoginHistory, user_login_history)
+        mapper(self.UsersContacts, contacts)
+        mapper(self.UsersHistory, users_history_table)
 
         Session = sessionmaker(bind=self.database_engine)
         self.session = Session()
@@ -95,9 +113,9 @@ class ServerStorage:
 
         # The function that is executed when the user logs in, writes the login fact to the database
     def user_login(self, username, ip_address, ip_port):
-        SERVER_LOGGER.info(f'user_login: {username} {ip_address}:{ip_port}')
+        server_logger.info(f'user_login: {username} {ip_address}:{ip_port}')
         result = self.session.query(self.AllUsers).filter_by(login_name=username)
-        SERVER_LOGGER.debug(f'user_login result query:{result}')
+        server_logger.debug(f'user_login result query:{result}')
         if result.count():
             user = result.first()
             user.last_login = datetime.datetime.now()
@@ -106,7 +124,7 @@ class ServerStorage:
             We create an instance of the self.AllUsers class, through which we transfer data to the table
             A commit is needed here to assign an ID
             '''
-            SERVER_LOGGER.info(f'new_user,add to DB {username} {ip_address}:{ip_port}')
+            server_logger.info(f'new_user,add to DB {username} {ip_address}:{ip_port}')
             user = self.AllUsers(username)
             self.session.add(user)
             self.session.commit()
@@ -171,6 +189,24 @@ class ServerStorage:
             query = query.filter(self.AllUsers.login_name == username)
         return query.all()
 
+    def get_contacts(self, username):
+
+        user = self.session.query(self.AllUsers).filter_by(name=username).one()
+        query = self.session.query(self.UsersContacts, self.AllUsers.name). \
+            filter_by(user=user.id). \
+            join(self.AllUsers, self.UsersContacts.contact == self.AllUsers.id)
+
+        return [contact[1] for contact in query.all()]
+
+
+    def message_history(self):
+        query = self.session.query(
+            self.AllUsers.name,
+            self.AllUsers.last_login,
+            self.UsersHistory.sent,
+            self.UsersHistory.accepted
+        ).join(self.AllUsers)
+        return query.all()
 
 
 if __name__ == '__main__':
@@ -180,10 +216,10 @@ if __name__ == '__main__':
     print(test_db.active_users_list())
 
     print('---adding users client_1 client_2 client_3 client_4---')
-    test_db.users_login('client_1', '192.168.1.4', '8888')
-    test_db.users_login('client_2', '192.168.1.5', '7777')
-    test_db.users_login('client_3', '192.168.0.0', '9999')
-    test_db.users_login('client_4', '192.168.4.4', '8888')
+    test_db.user_login('client_1', '192.168.1.4', '8888')
+    test_db.user_login('client_2', '192.168.1.5', '7777')
+    test_db.user_login('client_3', '192.168.0.0', '9999')
+    test_db.user_login('client_4', '192.168.4.4', '8888')
 
     print('---active_users_list---')
     print(test_db.active_users_list())

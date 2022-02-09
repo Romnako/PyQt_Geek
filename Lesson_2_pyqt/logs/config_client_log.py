@@ -1,32 +1,36 @@
 import sys
 import os
-from datetime import datetime
 import logging
 
 sys.path.append('../')
-from lib.variables import LOG_LEVEL, ENCODING, LOG_FORMATTER
+from Lesson_2_pyqt.lib.variables import  ENCODING, LOGGING_LEVEL
 
-CLIENT_FORMATTER = logging.Formatter(LOG_FORMATTER)
+# CLIENT_FORMATTER = logging.Formatter(LOG_FORMATTER)
+client_formatter = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(message)s')
 
 #Filename for logging
-PATH = os.path.dirname(os.path.abspath(__file__))
-PATH = os.path.join(PATH, 'client_' + datetime.now().strftime("%Y%m%d_%H%M%S") + '.log')
+path = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(path, 'client.log')
 
 #Create log output streams
-LOG_FILE = logging.FileHandler(PATH, encoding=ENCODING)
-LOG_FILE.setFormatter(CLIENT_FORMATTER)
+steam = logging.StreamHandler(sys.stderr)
+steam.setFormatter(client_formatter)
+steam.setLevel(logging.ERROR)
+log_file = logging.FileHandler(path, encoding=ENCODING)
+log_file.setFormatter(client_formatter)
 
 #Create registration
-LOGGER = logging.getLogger('client')
-LOGGER.addHandler(LOG_FILE)
-LOGGER.setLevel(LOG_LEVEL)
+logger  = logging.getLogger('client')
+logger.addHandler(steam)
+logger.addHandler(log_file)
+logger.setLevel(LOGGING_LEVEL)
 
 #debugging
 if __name__ == '__main__':
-    LOGGER.critical('Critical error')
-    LOGGER.error('Error')
-    LOGGER.debug('Debug information')
-    LOGGER.info('Info message')
+    logger.critical('Critical error')
+    logger.error('Error')
+    logger.debug('Debug information')
+    logger.info('Info message')
 
 
 

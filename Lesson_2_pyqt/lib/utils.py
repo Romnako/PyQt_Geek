@@ -2,7 +2,8 @@ import json
 import socket
 import sys
 from Lesson_2_pyqt.lib.errors import IncorrectDataReceivedError, NonDictInputError
-from Lesson_2_pyqt.lib.variables import PACKAGE_LENGHT, ENCODING, DEFAULT_PORT, DEFAULT_IP, MAX_CONNECTIONS, CLIENT_LISTEN
+from Lesson_2_pyqt.lib.variables import PACKAGE_LENGTH, ENCODING, DEFAULT_PORT, DEFAULT_IP, MAX_CONNECTIONS, CLIENT_LISTEN
+from Lesson_2_pyqt.logs.decoration_log import log
 
 
 def validate_ip(ip_str):
@@ -75,6 +76,7 @@ def create_socket():
     return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
+@log
 def get_message(client):
     '''
 
@@ -82,7 +84,7 @@ def get_message(client):
      accepts bytes
     :return: dictionary, if something else is accepted, it gives a value error
     '''
-    responce_bytes = client.recv(PACKAGE_LENGHT)
+    responce_bytes = client.recv(PACKAGE_LENGTH)
     if isinstance(responce_bytes, bytes):
         json_response = response_bytes.decode(ENCODING)
         response = json.loads(json_response)
@@ -93,6 +95,7 @@ def get_message(client):
     raise IncorrectDataReceivedError
 
 
+@log
 def send_message(sock_obj, message):
     '''
     Message encoding and sending utility
