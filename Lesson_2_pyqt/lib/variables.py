@@ -9,7 +9,9 @@ LOGGING_LEVEL = logging.DEBUG
 SERVER_CONFIG = 'server.ini'
 SERVER_DATABASE = 'sqlite:///server_db.db3'
 SERVER_TIMEOUT = 1/2
+POOL_RECYCLE = 7200
 
+CLIENT_LISTEN = False
 
 # Protocol JIM
 ACTION = 'action'
@@ -36,7 +38,6 @@ REMOVE_CONTACT = 'remove'
 ADD_CONTACT = 'add'
 USERS_REQUEST = 'get_users'
 
-CLIENT_LISTEN = False
 
 ERR_200 = '200:OK'
 ERR400 = '400:Bad request'

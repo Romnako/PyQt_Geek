@@ -1,6 +1,7 @@
 import json
 import socket
 import sys
+sys.path.append('../')
 from Lesson_2_pyqt.lib.errors import IncorrectDataReceivedError, NonDictInputError
 from Lesson_2_pyqt.lib.variables import PACKAGE_LENGTH, ENCODING, DEFAULT_PORT, DEFAULT_IP, MAX_CONNECTIONS, CLIENT_LISTEN
 from Lesson_2_pyqt.logs.decoration_log import log
@@ -84,8 +85,8 @@ def get_message(client):
      accepts bytes
     :return: dictionary, if something else is accepted, it gives a value error
     '''
-    responce_bytes = client.recv(PACKAGE_LENGTH)
-    if isinstance(responce_bytes, bytes):
+    response_bytes = client.recv(PACKAGE_LENGTH)
+    if isinstance(response_bytes, bytes):
         json_response = response_bytes.decode(ENCODING)
         response = json.loads(json_response)
 

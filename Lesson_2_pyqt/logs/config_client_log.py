@@ -3,7 +3,7 @@ import os
 import logging
 
 sys.path.append('../')
-from Lesson_2_pyqt.lib.variables import  ENCODING, LOGGING_LEVEL
+from Lesson_2_pyqt.lib.variables import ENCODING, LOGGING_LEVEL
 
 # CLIENT_FORMATTER = logging.Formatter(LOG_FORMATTER)
 client_formatter = logging.Formatter('%(asctime)s %(levelname)s %(filename)s %(message)s')

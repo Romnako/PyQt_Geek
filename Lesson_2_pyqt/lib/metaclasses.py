@@ -67,4 +67,4 @@ class ClientMaker(type):
                 pass
             else:
                 raise TypeError('There are no socket function calls.')
-            super().__init__(clsname, bases, clsdict)
+            super().__init__(clsname, base, clsdict)

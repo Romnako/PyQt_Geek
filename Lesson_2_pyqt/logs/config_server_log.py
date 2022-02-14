@@ -2,7 +2,7 @@ import sys
 import os
 
 import logging.handlers
-
+import logging
 sys.path.append('../')
 from Lesson_2_pyqt.lib.variables import LOGGING_LEVEL, ENCODING
 
@@ -23,8 +23,8 @@ logger.addHandler(steam)
 logger.setLevel(LOGGING_LEVEL)
 
 
-if __name__ == '__main__':
-    logger.critical('Critical error')
-    logger.error('Error')
-    logger.debug('Debug information')
-    logger.info('Info message')
+# if __name__ == '__main__':
+#     logger.critical('Critical error')
+#     logger.error('Error')
+#     logger.debug('Debug information')
+#     logger.info('Info message')
