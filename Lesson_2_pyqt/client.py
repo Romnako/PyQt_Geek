@@ -1,4 +1,5 @@
 import argparse
+import os
 import sys
 import logging
 import Lesson_2_pyqt.logs.config_client_log
@@ -11,7 +12,8 @@ from Lesson_2_pyqt.client.client_db import ClientDatabase
 from Lesson_2_pyqt.client.transport import ClientTransport
 from Lesson_2_pyqt.client.client_gui import UI_StartLoginDlg
 from Lesson_2_pyqt.client.client_main_window import ClientMainWindow
-
+from Cryptodome.PublicKey import RSA
+from PyQt5.QtWidgets import QApplication, QMessageBox
 
 client_logger = logging.getLogger('client')
 
@@ -25,6 +27,7 @@ def arg_parser():
     server_address = namespace.addr
     server_port = namespace.port
     client_name = namespace.name
+    client_passwd = namespace.password
 
     # проверим подходящий номер порта
     check_port = validate_port(server_port)
@@ -39,40 +42,67 @@ def arg_parser():
         print(f'Некорректный адрес соединения: {server_address}')
         exit(1)
 
-    return server_address, server_port, client_name
+    return server_address, server_port, client_name, client_passwd
 
 
 if __name__ == '__main__':
-    # Загружаем параметы командной строки
-    server_address, server_port, client_name = arg_parser()
+    # Загружаем параметры командной строки
+    server_address, server_port, client_name, client_passwd = arg_parser()
+    client_logger.debug(f'Args loaded: {server_address, server_port, client_name, client_passwd}')
 
     client_app = QApplication(sys.argv)
 
+    # Если имя пользователя не было указано в командной строке то запросим его
+    # start_dialog = UI_StartLoginDlg()
+
     if not client_name:
-        start_dialog=UI_StartLoginDlg()
-        client_app.exec_()
+        start_dialog = UI_StartLoginDlg()
+        if not client_name or not client_passwd:
+            client_app.exec_()
         if start_dialog.ok_pressed:
             client_name = start_dialog.client_name.text()
-            del start_dialog
+            client_passwd = start_dialog.client_passwd.text()
+            client_logger.debug(f'Using USERNAME = {client_name}, PASSWD = {client_passwd}.')
             client_logger.info(f'авторизация успешна: {client_name}')
+            # авторизация пройдена, стартовое окно больше не нужно
+            del start_dialog
         else:
             client_logger.info(f'Не пройдена авторизация - нажата отмена. Выход.')
             exit(0)
 
     client_logger.info(f'start client on: {server_address}:{server_port} | имя пользователя: {client_name}')
+
+    # Загружаем ключи с файла, если же файла нет, то генерируем новую пару.
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    dir_path = os.path.join(dir_path, 'client')
+    dir_path = os.path.join(dir_path, 'key')
+    key_file = os.path.join(dir_path, f'{client_name}.key')
+    if not os.path.exists(key_file):
+        keys = RSA.generate(2048, os.urandom)
+        with open(key_file, 'wb') as key:
+            key.write(keys.export_key())
+    else:
+        with open(key_file, 'rb') as key:
+            keys = RSA.import_key(key.read())
+
+    # !!!keys.publickey().export_key()
+    client_logger.debug("Keys sucsessfully loaded.")
+
     database = ClientDatabase(client_name)
     client_logger.debug((f'database={database}'))
-
     # Создаём объект - транспорт и запускаем транспортный поток
     try:
-        transport = ClientTransport(server_port, server_address, database, client_name)
+        transport = ClientTransport(server_port, server_address, database, client_name, client_passwd, keys)
     except ServerError as error:
-        print(error.text)
+        message = QMessageBox()
+        message.critical(start_dialog, 'Ошибка сервера', error.text)
         exit(1)
     transport.setDaemon(True)
     transport.start()
+    # авторизация пройдена, стартовое окно больше не нужно
+    # del start_dialog
 
-    client_main_window = ClientMainWindow(database, transport)
+    client_main_window = ClientMainWindow(database, transport, keys)
     client_main_window.make_connection(transport)
     client_main_window.setWindowTitle(f'{client_name}')
     client_app.exec_()

@@ -2,7 +2,7 @@ import sys
 import os
 import unittest
 from Lesson_2_pyqt.lib.variables import *
-from Lesson_2_pyqt.client import get_user, create_presence, create_action, process_handler, transport_send
+from Lesson_2_pyqt.client import *
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
 
@@ -24,7 +24,7 @@ class Test_Client(unittest.TestCase):
         test = create_presence()
         # Force change the key in the dictionary
         test[TIME] = 2
-        self.assertEqual(test,{ACTION: PRESENCE, TIME: 2, USER: {ACCOUNT_NAME: 'Guest'}})
+        self.assertEqual(test, {ACTION: PRESENCE, TIME: 2, USER: {ACCOUNT_NAME: 'Guest'}})
 
     def test_presence_user(self):
         '''
@@ -43,7 +43,7 @@ class Test_Client(unittest.TestCase):
         '''
         test = create_action(account_name='NEW_USER', action='action', msg='New_Message')
         test[TIME] = 2
-        self.assertEqual(test, {ACTION: 'action', TIME: 2, USER: {ACCOUNT_NAME: 'NEW_USER'}, MSG: 'New_Message'})
+        self.assertEqual(test, {ACTION: 'action', TIME: 2, USER: {ACCOUNT_NAME: 'NEW_USER'}, MESSAGE: 'New_Message'})
 
     def test_create_action_none_msg(self):
         '''
@@ -51,16 +51,16 @@ class Test_Client(unittest.TestCase):
           account_name and action are required, msg is None by default.
         :return:dictionary with the message text
         '''
-        test = create_action(account_name='NEW_USER',action='action')
+        test = create_action(account_name='NEW_USER', action='action')
         test[TIME] = 2
-        self.assertEqual(test, {ACTION: 'action', TIME: 2, USER: {ACCOUNT_NAME: 'NEW_USER'}, MSG: None})
+        self.assertEqual(test, {ACTION: 'action', TIME: 2, USER: {ACCOUNT_NAME: 'NEW_USER'}, MESSAGE: None})
 
     def test_process_handler_not_200ok(self):
         '''
         Checking the response from the server, if the required RESPONCE field is missing, there should be a 400 error
         :return: answer from the server
         '''
-        self.assertEqual(process_handler({MSG: 'msg_srv'}), '400:Bad request')
+        self.assertEqual(process_handler({MESSAGE: 'msg_srv'}), '400:Bad request')
 
     def test_process_handler_ok(self):
         '''
@@ -68,7 +68,7 @@ class Test_Client(unittest.TestCase):
         for {RESPONSE:200, MSG:"not an empty message"}
         :return: answer from the server
         '''
-        self.assertEqual(process_handler({RESPONSE: 200, MSG: 'msg_srv'}), 'msg_srv')
+        self.assertEqual(process_handler({RESPONSE: 200, MESSAGE: 'msg_srv'}), 'msg_srv')
 
 
 if __name__ == '__main__':

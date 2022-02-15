@@ -191,3 +191,6 @@ class ClientTransport(threading.Thread, QObject):
                     self.process_server_ans(message)
                 finally:
                     self.transport.settimeout(5)
+            if message:
+                client_logger.debug(f'Принято сообщение с сервера: {message}')
+                self.process_server_ans(message)

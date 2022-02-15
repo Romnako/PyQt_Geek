@@ -2,7 +2,7 @@ import sys
 import os
 import unittest
 from Lesson_2_pyqt.lib.variables import *
-from Lesson_2_pyqt.server import client_message_handler
+from Lesson_2_pyqt.server import *
 
 sys.path.append(os.path.join(os.getcwd(), '..'))
 
@@ -13,7 +13,7 @@ class Test_Server(unittest.TestCase):
     '''
 
     failed_dict = {RESPONSE: 400, ERROR: ERR400}
-    success_dict_quest = {'error': '200:OK','msg': 'Welcome, Guest', 'responce': 200 }
+    success_dict_quest = {'error': '200:OK', 'msg': 'Welcome, Guest', 'responce': 200 }
     success_dict_auth_user = {'error': '200:OK', 'msg': 'Welcome, AUTH_USER', 'response': 200}
 
     def test_fail_message_object(self):

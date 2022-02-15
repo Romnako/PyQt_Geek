@@ -9,9 +9,20 @@ import datetime
 
 class ClientDatabase:
     class KnownUsers:
-        def __init__(self):
+        def __init__(self, user):
             self.id = None
             self.username = user
+
+
+    # Класс - отображение для таблицы статистики переданных сообщений.
+    class MessageStat:
+        def __init__(self, contact, direction, message):
+            self.id = None
+            self.contact = contact
+            self.direction = direction
+            self.message = message
+            self.date = datetime.datetime.now()
+
 
 
     class MessageHistory:
@@ -74,14 +85,14 @@ class ClientDatabase:
             self.session.add(contact_row)
             self.session.commit
 
-    def del_contact(self, contact):
+    def contact_clear(self, contact):
         self.session.query(self.Contacts).filter_by(name=contact).delete()
 
 
     def add_users(self, users_list):
         self.session.query(self.KnownUsers).delete()
         for users in users_list:
-            user_row = self.KnownUsers(user)
+            user_row = self.KnownUsers()
             self.session.add(user_row)
         self.session.commit()
 

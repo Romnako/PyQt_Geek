@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, DateTime, Text
 from sqlalchemy.orm import mapper, sessionmaker
 from Lesson_2_pyqt.lib.variables import *
 import datetime
@@ -112,95 +112,100 @@ class ServerStorage:
         self.session.query(self.ActiveUsers).delete()
         self.session.commit()
 
-    # Функция выполняющяяся при входе пользователя, записывает в базу факт входа
-    def user_login(self, username, ip_address, port):
-        # Запрос в таблицу пользователей на наличие там пользователя с таким именем
+    # Функция выполняющяяся при входе пользователя, записывает в базу факт входа /  ключ
+    def user_login(self, username, ip_address, port, key):
         rez = self.session.query(self.AllUsers).filter_by(name=username)
-
         # Если имя пользователя уже присутствует в таблице, обновляем время последнего входа
         if rez.count():
             user = rez.first()
             user.last_login = datetime.datetime.now()
-        # Если нету, то создаем нового пользователя
+            if user.pubkey != key:
+                user.pubkey = key
+        # Если нет - незареганным нельзя
         else:
-            user = self.AllUsers(username)
-            self.session.add(user)
-            # Комит здесь нужен, чтобы присвоился ID
-            self.session.commit()
-            user_in_history = self.UsersHistory(user.id)
-            self.session.add(user_in_history)
+            raise ValueError('Пользователь не зарегистрирован.')
 
         # Теперь можно создать запись в таблицу активных пользователей о факте входа.
         new_active_user = self.ActiveUsers(user.id, ip_address, port, datetime.datetime.now())
         self.session.add(new_active_user)
-
         # и сохранить в историю входов
         history = self.LoginHistory(user.id, datetime.datetime.now(), ip_address, port)
         self.session.add(history)
-
-        # Сохрраняем изменения
+        # Сохраняем изменения
         self.session.commit()
 
-    # Функция фиксирующая отключение пользователя
-    def user_logout(self, username):
-        # Запрашиваем пользователя, что покидает нас
-        user = self.session.query(self.AllUsers).filter_by(name=username).first()
-        # Удаляем его из таблицы активных пользователей.
+    def add_user(self, name, passwd_hash):
+        user_row = self.AllUsers(name, passwd_hash)
+        self.session.add(user_row)
+        self.session.commit()
+        history_row = self.UsersHistory(user_row.id)
+        self.session.add(history_row)
+        self.session.commit()
+
+    def remove_user(self, name):
+        user = self.session.query(self.AllUsers).filter_by(name=name).first()
         self.session.query(self.ActiveUsers).filter_by(user=user.id).delete()
-        # Применяем изменения
+        self.session.query(self.LoginHistory).filter_by(name=user.id).delete()
+        self.session.query(self.UsersContacts).filter_by(user=user.id).delete()
+        self.session.query(self.UsersContacts).filter_by(contact=user.id).delete()
+        self.session.query(self.UsersHistory).filter_by(user=user.id).delete()
+        self.session.query(self.AllUsers).filter_by(name=name).delete()
         self.session.commit()
 
-    # Функция фиксирует передачу сообщения и делает соответствующие отметки в БД
+    def get_hash(self, name):
+        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        return user.passwd_hash
+
+    def get_pubkey(self, name):
+        user = self.session.query(self.AllUsers).filter_by(name=name).first()
+        return user.pubkey
+
+    def check_user(self, name):
+        if self.session.query(self.AllUsers).filter_by(name=name).count():
+            return True
+        else:
+            return False
+
+    def user_logout(self, username):
+        user = self.session.query(self.AllUsers).filter_by(name=username).first()
+        self.session.query(self.ActiveUsers).filter_by(user=user.id).delete()
+        self.session.commit()
+
     def process_message(self, sender, recipient):
-        # Получаем ID отправителя и получателя
         sender = self.session.query(self.AllUsers).filter_by(name=sender).first().id
         recipient = self.session.query(self.AllUsers).filter_by(name=recipient).first().id
-        # Запрашиваем строки из истории и увеличиваем счётчики
         sender_row = self.session.query(self.UsersHistory).filter_by(user=sender).first()
         sender_row.sent += 1
         recipient_row = self.session.query(self.UsersHistory).filter_by(user=recipient).first()
         recipient_row.accepted += 1
-
         self.session.commit()
 
-    # Функция добавляет контакт для пользователя.
     def add_contact(self, user, contact):
-        # Получаем ID пользователей
         user = self.session.query(self.AllUsers).filter_by(name=user).first()
         contact = self.session.query(self.AllUsers).filter_by(name=contact).first()
-
         # Проверяем что не дубль и что контакт может существовать (полю пользователь мы доверяем)
-        if not contact or self.session.query(self.UsersContacts).filter_by(user=user.id, contact=contact.id).count():
+        if not contact or self.session.query(self.UsersContacts).filter_by(user=user.id,
+                                                                           contact=contact.id).count():
             return
-
         # Создаём объект и заносим его в базу
         contact_row = self.UsersContacts(user.id, contact.id)
         self.session.add(contact_row)
         self.session.commit()
 
-    # Функция удаляет контакт из базы данных
     def remove_contact(self, user, contact):
-        # Получаем ID пользователей
         user = self.session.query(self.AllUsers).filter_by(name=user).first()
         contact = self.session.query(self.AllUsers).filter_by(name=contact).first()
-
         # Проверяем что контакт может существовать (полю пользователь мы доверяем)
         if not contact:
             return
-
-        # Удаляем требуемое
         self.session.query(self.UsersContacts).filter(self.UsersContacts.user == user.id,
                                                       self.UsersContacts.contact == contact.id).delete()
         self.session.commit()
 
-    # Функция возвращает список известных пользователей со временем последнего входа.
     def users_list(self):
-        # Запрос строк таблицы пользователей.
-        query = self.session.query(self.AllUsers.name,self.AllUsers.last_login)
-        # Возвращаем список кортежей
+        query = self.session.query(self.AllUsers.name, self.AllUsers.last_login)
         return query.all()
 
-    # Функция возвращает список активных пользователей
     def active_users_list(self):
         # Запрашиваем соединение таблиц и собираем кортежи имя, адрес, порт, время.
         query = self.session.query(
@@ -209,10 +214,8 @@ class ServerStorage:
             self.ActiveUsers.port,
             self.ActiveUsers.login_time
         ).join(self.AllUsers)
-        # Возвращаем список кортежей
         return query.all()
 
-    # Функция возвращающаяя историю входов по пользователю или всем пользователям
     def login_history(self, username=None):
         # Запрашиваем историю входа
         query = self.session.query(self.AllUsers.name,
@@ -228,14 +231,10 @@ class ServerStorage:
 
     # Функция возвращает список контактов пользователя.
     def get_contacts(self, username):
-        # Запрашивааем указанного пользователя
         user = self.session.query(self.AllUsers).filter_by(name=username).one()
-
-        # Запрашиваем его список контактов
         query = self.session.query(self.UsersContacts, self.AllUsers.name). \
             filter_by(user=user.id). \
             join(self.AllUsers, self.UsersContacts.contact == self.AllUsers.id)
-
         # выбираем только имена пользователей и возвращаем их.
         return [contact[1] for contact in query.all()]
 
@@ -247,9 +246,7 @@ class ServerStorage:
             self.UsersHistory.sent,
             self.UsersHistory.accepted
         ).join(self.AllUsers)
-        # Возвращаем список кортежей
         return query.all()
-
 
 # Отладка
 if __name__ == '__main__':
