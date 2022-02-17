@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Константы &#8212; документация Mini Chat 0.0.1</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="prev" title="Дополнительные модули" href="libs.html" />
+
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+
+
+          <div class="body" role="main">
+
+  <section id="id1">
+<h1>Константы<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<p>Константы описаны в модуле  <strong>lib.variables</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>указание порта для соединений по умолчанию:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">DEFAULT_PORT</span> <span class="pre">=</span> <span class="pre">7777</span></code></p>
+<ul class="simple">
+<li><p>указание ip-адреса по умолчанию:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">DEFAULT_IP_ADDRESS</span> <span class="pre">=</span> <span class="pre">'127.0.0.1'</span></code></p>
+<ul class="simple">
+<li><p>максимальное количество коннектов к серверу:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">MAX_CONNECTIONS</span> <span class="pre">=</span> <span class="pre">5</span></code></p>
+<ul class="simple">
+<li><p>длина сетевого пакета:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">PACKAGE_LENGTH</span> <span class="pre">=</span> <span class="pre">1024</span></code></p>
+<ul class="simple">
+<li><p>кодировка проекта:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">ENCODING</span> <span class="pre">=</span> <span class="pre">'utf-8'</span></code></p>
+<ul class="simple">
+<li><p>уровень логирования:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">LOGGING_LEVEL</span> <span class="pre">=</span> <span class="pre">logging.DEBUG</span></code></p>
+<ul class="simple">
+<li><p>база данных сервера:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">SERVER_DATABASE</span> <span class="pre">=</span> <span class="pre">'sqlite:///server_db.db3'</span></code></p>
+<ul class="simple">
+<li><p>ini-файл для настроек сервера:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">SERVER_CONFIG</span> <span class="pre">=</span> <span class="pre">'server.ini'</span></code></p>
+<ul class="simple">
+<li><p>таймаут сервера для опроса сокетов:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">SERVER_TIMEOUT</span> <span class="pre">=</span> <span class="pre">1/2</span></code></p>
+<ul class="simple">
+<li><p>масимальный возраст соединения</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">POOL_RECYCLE</span> <span class="pre">=</span> <span class="pre">7200</span></code></p>
+<ul class="simple">
+<li><p>валидаторы символов для полей (логин / пароль / IPv4 / порт)</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">RE_LOGIN_MASK='[a-zA-Z][a-zA-Z0-9]{1,25}'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RE_PASWD_MASK='[a-zA-Z][a-zA-Z0-9]{1,12}'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RE_IPV4_VALIDATOR='((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RE_PORT_VALIDATOR='[0-9]{0,5}'</span></code></p>
+<ul class="simple">
+<li><p>флаг для использования клиента только в режиме прослушивания. использовался в ранних версиях</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">CLIENT_LISTEN</span> <span class="pre">=</span> <span class="pre">False</span>&#160; <span class="pre">#</span> <span class="pre">используется</span> <span class="pre">для</span> <span class="pre">определения,</span> <span class="pre">клиент</span> <span class="pre">пишет</span> <span class="pre">или</span> <span class="pre">слушает</span></code></p>
+</div></blockquote>
+<section id="jim">
+<h2>Прококол JIM основные ключи<a class="headerlink" href="#jim" title="Ссылка на этот заголовок">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">ACTION</span> <span class="pre">=</span> <span class="pre">'action'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">TIME</span> <span class="pre">=</span> <span class="pre">'time'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">USER</span> <span class="pre">=</span> <span class="pre">'user'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">ACCOUNT_NAME</span> <span class="pre">=</span> <span class="pre">'account_name'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">SENDER</span> <span class="pre">=</span> <span class="pre">'from'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">DESTINATION</span> <span class="pre">=</span> <span class="pre">'to'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">DATA</span> <span class="pre">=</span> <span class="pre">'bin'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PUBLIC_KEY</span> <span class="pre">=</span> <span class="pre">'pubkey'</span></code></p>
+</div></blockquote>
+</section>
+<section id="id2">
+<h2>Прочие ключи, используемые в протоколе<a class="headerlink" href="#id2" title="Ссылка на этот заголовок">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">PRESENCE</span> <span class="pre">=</span> <span class="pre">'presence'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RESPONSE</span> <span class="pre">=</span> <span class="pre">'response'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">ERROR</span> <span class="pre">=</span> <span class="pre">'error'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">MESSAGE</span> <span class="pre">=</span> <span class="pre">'message'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">MESSAGE_TEXT</span> <span class="pre">=</span> <span class="pre">'mess_text'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">EXIT</span> <span class="pre">=</span> <span class="pre">'exit'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">LISTEN</span> <span class="pre">=</span> <span class="pre">'listen'</span>&#160; <span class="pre">#</span> <span class="pre">ключ</span> <span class="pre">для</span> <span class="pre">словаря,</span> <span class="pre">отправка</span> <span class="pre">от</span> <span class="pre">клиента</span> <span class="pre">запрос</span> <span class="pre">на</span> <span class="pre">прослушивание</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">GET_CONTACTS</span> <span class="pre">=</span> <span class="pre">'get_contacts'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">LIST_INFO</span> <span class="pre">=</span> <span class="pre">'data_list'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">REMOVE_CONTACT</span> <span class="pre">=</span> <span class="pre">'remove'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">ADD_CONTACT</span> <span class="pre">=</span> <span class="pre">'add'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">USERS_REQUEST</span> <span class="pre">=</span> <span class="pre">'get_users'</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">PUBLIC_KEY_REQUEST</span> <span class="pre">=</span> <span class="pre">'pubkey_need'</span></code></p>
+</div></blockquote>
+</section>
+<section id="id3">
+<h2>Словари - ответы:<a class="headerlink" href="#id3" title="Ссылка на этот заголовок">¶</a></h2>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">RESPONSE_200</span> <span class="pre">=</span> <span class="pre">{RESPONSE:</span> <span class="pre">200}</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RESPONSE_202</span> <span class="pre">=</span> <span class="pre">{RESPONSE:</span> <span class="pre">202,</span> <span class="pre">LIST_INFO:</span> <span class="pre">None}</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RESPONSE_400</span> <span class="pre">=</span> <span class="pre">{RESPONSE:</span> <span class="pre">400,</span> <span class="pre">ERROR:</span> <span class="pre">None}</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RESPONSE_205</span> <span class="pre">=</span> <span class="pre">{RESPONSE:</span> <span class="pre">205}</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">RESPONSE_511</span> <span class="pre">=</span> <span class="pre">{RESPONSE:</span> <span class="pre">511,DATA:</span> <span class="pre">None}</span></code></p>
+</div></blockquote>
+</section>
+</section>
+
+
+          </div>
+
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Mini Chat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Навигация</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="server.html">Серверная часть</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Клиентская часть</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Логирование</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libs.html">Дополнительные модули</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Константы</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#jim">Прококол JIM основные ключи</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">Прочие ключи, используемые в протоколе</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Словари - ответы:</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="libs.html" title="предыдущая глава">Дополнительные модули</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Быстрый поиск</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Искать" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Popadin Roman.
+
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+
+      |
+      <a href="_sources/vatiable.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+
+
+
+  </body>
+</html>

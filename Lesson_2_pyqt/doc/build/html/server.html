@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Серверная часть &#8212; документация Mini Chat 0.0.1</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Клиентская часть" href="client.html" />
+    <link rel="prev" title="Документация к приложению «Mini Chat»." href="index.html" />
+
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+
+
+          <div class="body" role="main">
+
+  <section id="id1">
+<h1>Серверная часть<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<p>Серверный модуль приложения.</p>
+<p>При запуске можно указывать аргументы командной строки:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>указание порта для соединения:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">server.py</span> <span class="pre">-p</span> <span class="pre">7777</span></code></p>
+<ul class="simple">
+<li><p>указание адреса, с которого принимаюатся соединения:</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">server.py</span> <span class="pre">-a</span> <span class="pre">192.168.0.100</span></code></p>
+<ul class="simple">
+<li><p>флаг запуска в консольном режиме. В нем поддерживается только одна команда: exit - завершение работы</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">server.py</span> <span class="pre">--no-gui</span></code></p>
+<p>Главное окно приложения:</p>
+</div></blockquote>
+<img alt="main window" class="align-center" src="_images/server_main_window.png" />
+<hr class="docutils" />
+<section id="server-ini">
+<h2>server.ini<a class="headerlink" href="#server-ini" title="Ссылка на этот заголовок">¶</a></h2>
+<dl>
+<dt>Файл с настройками запуска сервера. Находится в директории с основным файлом server.py:</dt><dd><p>[SETTINGS]
+database_path =</p>
+<p>database_file = server_db.db3</p>
+<p>default_port = 7777</p>
+<p>listen_address =</p>
+<p>Эти настройки можно задать как в самом файле, так и с помощью графического модуля.</p>
+</dd>
+</dl>
+<img alt="config window" class="align-center" src="_images/server_config_window.png" />
+</section>
+<hr class="docutils" />
+<section id="module-server">
+<span id="server-py"></span><h2>server.py<a class="headerlink" href="#module-server" title="Ссылка на этот заголовок">¶</a></h2>
+<dl>
+<dt>Модуль, запускающий серверную часть. Содержит:</dt><dd><ul>
+<li><dl>
+<dt>парсер аргументов командной строки</dt><dd><p>Функция парсинга аргументов командной строки:</p>
+<p>-p 7777 - порт</p>
+<p>-a 127.0.0.1 - ip адрес с которого принимаются сообщения клиентов. Если не задано - то любой адрес.</p>
+<dl class="option-list">
+<dt><kbd><span class="option">--no_gui</span></kbd></dt>
+<dd><p>старт сервера в консольном режиме.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><p>парсер значений из настроечного файла server.ini</p></li>
+<li><p>функционал инициализации приложения</p>
+<blockquote>
+<div><p>Загружает конфигурацию из командной строки / server.ini
+Инициализирует базу данных.
+Запускает демон.</p>
+</div></blockquote>
+</li>
+</ul>
+</dd>
+</dl>
+<hr class="docutils" />
+<section id="core-py">
+<h3>core.py<a class="headerlink" href="#core-py" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Ядро сервера. В модуле описана основная логика серверной части.</p>
+<p>Содержит класс-поток обрабатывающий сообщения.</p>
+<p>Удяляет, добавляет пользователей.</p>
+<dl class="py class">
+<dt id="server.core.MessageProcessor">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.core.</span></code><code class="sig-name descname"><span class="pre">MessageProcessor</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listen_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">listen_port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Основной класс сервера. Принимает соединения, словари - пакеты от клиентов, обрабатывает поступающие сообщения.
+Работает в качестве отдельного потока.</p>
+<dl class="py method">
+<dt id="server.core.MessageProcessor.autorize_user">
+<code class="sig-name descname"><span class="pre">autorize_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sock</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor.autorize_user" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод авторизации пользователя</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.core.MessageProcessor.init_socket">
+<code class="sig-name descname"><span class="pre">init_socket</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor.init_socket" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод инициализации сокета для подключения клентов.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.core.MessageProcessor.process_client_message">
+<code class="sig-name descname"><span class="pre">process_client_message</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor.process_client_message" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод для обработки поступающих сообщений.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.core.MessageProcessor.process_message">
+<code class="sig-name descname"><span class="pre">process_message</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor.process_message" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод отправки сообщения клиенту.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.core.MessageProcessor.remove_client">
+<code class="sig-name descname"><span class="pre">remove_client</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor.remove_client" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод удаления клиента.
+Вызывается функция удаления клиента из таблицы активных пользователей в БД.
+Осуществляется удаление клиента из объекта-словаря</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.core.MessageProcessor.run">
+<code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor.run" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Основной цикл потока.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.core.MessageProcessor.service_update_lists">
+<code class="sig-name descname"><span class="pre">service_update_lists</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.core.MessageProcessor.service_update_lists" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод отправки сервисного сообщения с кодом 205 клиентам.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="server-db-py">
+<h3>server_db.py<a class="headerlink" href="#server-db-py" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Модуль, описывающий работу с базой данных.</p>
+<dl class="py class">
+<dt id="server.server_db.ServerStorage">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.server_db.</span></code><code class="sig-name descname"><span class="pre">ServerStorage</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс для работы с БД сервера. Использует SQLite базу данных
+Реализован с помощью SQLAlchemy ORM и используется классический подход.</p>
+<dl class="py class">
+<dt id="server.server_db.ServerStorage.ActiveUsers">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">ActiveUsers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">login_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.ActiveUsers" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - отображение таблицы активных пользователей</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_db.ServerStorage.AllUsers">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">AllUsers</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd_hash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.AllUsers" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - отображение таблицы всех пользователей</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_db.ServerStorage.LoginHistory">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">LoginHistory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.LoginHistory" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - отображение таблицы истории входd пользователей</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_db.ServerStorage.UsersContacts">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">UsersContacts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.UsersContacts" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - отображение таблицы контактов пользователей</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_db.ServerStorage.UsersHistory">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">UsersHistory</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.UsersHistory" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс отображение таблицы истории действий</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.active_users_list">
+<code class="sig-name descname"><span class="pre">active_users_list</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.active_users_list" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод возвращающий список пользователей OnLine.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.add_contact">
+<code class="sig-name descname"><span class="pre">add_contact</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.add_contact" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод добавления контакта для пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.add_user">
+<code class="sig-name descname"><span class="pre">add_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">passwd_hash</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.add_user" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод регистрации пользователя.
+Принимает имя и хэш пароля, создаёт запись в таблице статистики.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.check_user">
+<code class="sig-name descname"><span class="pre">check_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.check_user" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод проверяющий существование пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.get_contacts">
+<code class="sig-name descname"><span class="pre">get_contacts</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.get_contacts" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод возвращающий список контактов пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.get_hash">
+<code class="sig-name descname"><span class="pre">get_hash</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.get_hash" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод получения хэша пароля пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.get_pubkey">
+<code class="sig-name descname"><span class="pre">get_pubkey</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.get_pubkey" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод получения публичного ключа пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.login_history">
+<code class="sig-name descname"><span class="pre">login_history</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.login_history" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод возвращающий историю входов.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.message_history">
+<code class="sig-name descname"><span class="pre">message_history</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.message_history" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод возвращающий статистику сообщений.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.process_message">
+<code class="sig-name descname"><span class="pre">process_message</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sender</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipient</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.process_message" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод записывающий в таблицу статистики факт передачи сообщения.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.remove_contact">
+<code class="sig-name descname"><span class="pre">remove_contact</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.remove_contact" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод удаления контакта пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.remove_user">
+<code class="sig-name descname"><span class="pre">remove_user</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.remove_user" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод удаляющий пользователя из базы.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.user_login">
+<code class="sig-name descname"><span class="pre">user_login</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.user_login" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод выполняющийся при входе пользователя, записывает в базу факт входа
+Обновляет открытый ключ пользователя при его изменении.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.user_logout">
+<code class="sig-name descname"><span class="pre">user_logout</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.user_logout" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод фиксирующий отключения пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_db.ServerStorage.users_list">
+<code class="sig-name descname"><span class="pre">users_list</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_db.ServerStorage.users_list" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод возвращающий список известных пользователей со временем последнего входа.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="server-gui-py">
+<h3>server_gui.py<a class="headerlink" href="#server-gui-py" title="Ссылка на этот заголовок">¶</a></h3>
+<p>Модуль оконного интерфейса серверной части.</p>
+<dl class="py class">
+<dt id="server.server_gui.MainWindow">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.server_gui.</span></code><code class="sig-name descname"><span class="pre">MainWindow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.MainWindow" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс описания главного окна серверной части</p>
+<dl class="py method">
+<dt id="server.server_gui.MainWindow.create_users_model">
+<code class="sig-name descname"><span class="pre">create_users_model</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.MainWindow.create_users_model" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод заполняющий таблицу активных пользователей.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_gui.MainWindow.reg_user">
+<code class="sig-name descname"><span class="pre">reg_user</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.MainWindow.reg_user" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод создающий окно регистрации пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_gui.MainWindow.rem_user">
+<code class="sig-name descname"><span class="pre">rem_user</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.MainWindow.rem_user" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод создающий окно удаления пользователя.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_gui.MainWindow.server_config">
+<code class="sig-name descname"><span class="pre">server_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.MainWindow.server_config" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод создающий окно с настройками сервера.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_gui.MainWindow.show_login_history">
+<code class="sig-name descname"><span class="pre">show_login_history</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.MainWindow.show_login_history" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод создающий окно с историей входов клиентов.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_gui.MainWindow.show_statistics">
+<code class="sig-name descname"><span class="pre">show_statistics</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.MainWindow.show_statistics" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод создающий окно со статистикой клиентов.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_gui.StatWindow">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.server_gui.</span></code><code class="sig-name descname"><span class="pre">StatWindow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.StatWindow" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс описания окна со статистикой сообщений пользователей</p>
+<dl class="py method">
+<dt id="server.server_gui.StatWindow.create_stat_model">
+<code class="sig-name descname"><span class="pre">create_stat_model</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.StatWindow.create_stat_model" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод реализующий заполнение таблицы статистикой сообщений.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_gui.LoginHistoryWindow">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.server_gui.</span></code><code class="sig-name descname"><span class="pre">LoginHistoryWindow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.LoginHistoryWindow" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс описания окна истории входов пользователей</p>
+<dl class="py method">
+<dt id="server.server_gui.LoginHistoryWindow.create_history_model">
+<code class="sig-name descname"><span class="pre">create_history_model</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.LoginHistoryWindow.create_history_model" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод реализующий заполнение таблицы историей входов пользователей.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_gui.DelUserDialog">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.server_gui.</span></code><code class="sig-name descname"><span class="pre">DelUserDialog</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.DelUserDialog" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс описания окна удаления пользователя</p>
+<dl class="py method">
+<dt id="server.server_gui.DelUserDialog.all_users_fill">
+<code class="sig-name descname"><span class="pre">all_users_fill</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.DelUserDialog.all_users_fill" title="Ссылка на это определение">¶</a></dt>
+<dd><p>метод получения списка всех пользователей</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="server.server_gui.DelUserDialog.remove_user">
+<code class="sig-name descname"><span class="pre">remove_user</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.DelUserDialog.remove_user" title="Ссылка на это определение">¶</a></dt>
+<dd><p>метод удаления пользователя:
+удаляет из БД
+рассылает служебное сообщение клиентам для обновления списка контактов</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_gui.RegisterUser">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.server_gui.</span></code><code class="sig-name descname"><span class="pre">RegisterUser</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">database</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">server</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.RegisterUser" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс описания окна создания нового пользователя</p>
+<dl class="py method">
+<dt id="server.server_gui.RegisterUser.save_data">
+<code class="sig-name descname"><span class="pre">save_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.RegisterUser.save_data" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод проверки правильности ввода и сохранения в базу нового пользователя.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="server.server_gui.ConfigWindow">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">server.server_gui.</span></code><code class="sig-name descname"><span class="pre">ConfigWindow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.ConfigWindow" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс окна настроек.</p>
+<dl class="py method">
+<dt id="server.server_gui.ConfigWindow.save_server_config">
+<code class="sig-name descname"><span class="pre">save_server_config</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#server.server_gui.ConfigWindow.save_server_config" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метод сохранения настроек. Проверяет правильность введённых данных
+и если всё правильно сохраняет ini файл.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Mini Chat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Навигация</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Серверная часть</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#server-ini">server.ini</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-server">server.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#core-py">core.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#server-db-py">server_db.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#server-gui-py">server_gui.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Клиентская часть</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Логирование</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libs.html">Дополнительные модули</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vatiable.html">Константы</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="предыдущая глава">Документация к приложению «Mini Chat».</a></li>
+      <li>Next: <a href="client.html" title="следующая глава">Клиентская часть</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Быстрый поиск</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Искать" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Popadin Roman.
+
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+
+      |
+      <a href="_sources/server.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+
+
+
+  </body>
+</html>
