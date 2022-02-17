@@ -10,6 +10,7 @@ import base64
 import json
 from Lesson_2_pyqt.lib.variables import *
 from Lesson_2_pyqt.lib.errors import ServerError
+
 logger = logging.getLogger('client')
 
 

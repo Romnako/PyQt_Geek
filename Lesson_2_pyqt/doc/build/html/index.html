@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Документация к приложению «Mini Chat». &#8212; документация Mini Chat 0.0.1</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Серверная часть" href="server.html" />
+
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+
+
+          <div class="body" role="main">
+
+  <section id="mini-chat">
+<h1>Документация к приложению «Mini Chat».<a class="headerlink" href="#mini-chat" title="Ссылка на этот заголовок">¶</a></h1>
+<blockquote>
+<div><p>Приложение обеспечивает зашифрованную передачу текстовых сообщений между клиентами.
+Состоит из 2-х частей: сервер и клиент.</p>
+<p>Обмен сообщениями происходит с помощью словарей.</p>
+<p>Например первоначальное приветствие.</p>
+<p><strong>{ACTION:presence, TIME:time, USER:user}</strong></p>
+<p>Все поля в сообщении описаны в модуле variables.py</p>
+<p>Сервер и клиенты используют собственные базы данных sqllite.
+Пароли от логинов на стороне сервера хранятся в зашифрованном хэшированном виде.</p>
+<p>Имя клиента может состоять из латинских букв и цифр, длина до 25 символом.Первый символ не может быть цифрой.</p>
+<p>Пароль, также как и логин, может состоять из латинских букв и цифр, длина до 12 символов. Первый символ не может быть цифрой.</p>
+</div></blockquote>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Серверная часть</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="server.html#server-ini">server.ini</a></li>
+<li class="toctree-l2"><a class="reference internal" href="server.html#module-server">server.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="server.html#core-py">core.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#server-db-py">server_db.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="server.html#server-gui-py">server_gui.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Клиентская часть</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="client.html#client-py">client.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="client.html#transport-py">transport.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="client.html#client-db-py">client_db.py</a></li>
+<li class="toctree-l3"><a class="reference internal" href="client.html#client-gui-py">client_gui.py</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Логирование</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#config-server-log-py">config_server_log.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#config-client-log-py">config_client_log.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="logger.html#decoration-py">decoration.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="libs.html">Дополнительные модули</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="libs.html#decoration-py">decoration.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libs.html#descryptors-py">descryptors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libs.html#errors-py">errors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libs.html#metaclasses-py">metaclasses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libs.html#module-lib.utils.get_message">utils.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libs.html#start-scripts-py">start_scripts.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vatiable.html">Константы</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vatiable.html#jim">Прококол JIM основные ключи</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vatiable.html#id2">Прочие ключи, используемые в протоколе</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vatiable.html#id3">Словари - ответы:</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="id1">
+<h1>Индексы и таблицы<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Алфавитный указатель</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Состав модуля</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Поиск</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Mini Chat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Навигация</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="server.html">Серверная часть</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Клиентская часть</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Логирование</a></li>
+<li class="toctree-l1"><a class="reference internal" href="libs.html">Дополнительные модули</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vatiable.html">Константы</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="server.html" title="следующая глава">Серверная часть</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Быстрый поиск</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Искать" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Popadin Roman.
+
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+
+
+
+  </body>
+</html>
