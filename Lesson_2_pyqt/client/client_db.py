@@ -5,7 +5,7 @@ import os
 import sys
 # sys.path.append('../')
 from Lesson_2_pyqt.lib.variables import *
-
+from sqlalchemy.sql import default_comparator
 
 class ClientDatabase:
     '''

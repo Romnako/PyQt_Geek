@@ -1,70 +1,60 @@
 import dis
 
-'''Metaclass for server matching'''
+
 class ServerMaker(type):
-    def __init__(self, clsname, bases, clsdict):
-        '''
+    '''
+    Метакласс, проверяющий что в результирующем классе нет клиентских
+    вызовов таких как: connect. Также проверяется, что серверный
+    сокет является TCP и работает по IPv4 протоколу.
+    '''
 
-        :param clsname: metaclass instance - Server
-        :param bases: base class tuple - ()
-        :param clsdict: dictionary of attributes and methods of a metaclass instance
-        '''
-
+    def __init__(cls, clsname, bases, clsdict):
         methods = []
         attributes = []
-
-        for func_element in clsdict:
+        for func in clsdict:
             try:
-                res = dis.get_instructions(clsdict[func_element])
+                ret = dis.get_instructions(clsdict[func])
             except TypeError:
                 pass
             else:
-                for res_el in res:
-                    #print(res_el)
-                    if res_el.opname == 'LOAD_GLOBAL':
-                        # opname- operation name
-                        if res_el.argval not in methods:
-                            methods.append(res_el.argval)
-                    elif res_el.opname =='LOAD_ATTR':
-                        if res_el.argval not in attributes:
-                            attributes.append(res_el.argval)
-        # print(f'attributes={attributes}')
-        # print(f'methods={methods}')
-
-        if connect.lower() in methods:
-            raise TypeError("Server class cannot use 'connect' method")
-        if not ('socket_transport'.lower() in attributes and 'create_socket'.lower() in methods):
-            raise TypeError('Incorrect socket initialization.')
+                for i in ret:
+                    if i.opname == 'LOAD_GLOBAL':
+                        if i.argval not in methods:
+                            methods.append(i.argval)
+                    elif i.opname == 'LOAD_ATTR':
+                        if i.argval not in attributes:
+                            attributes.append(i.argval)
+        if 'connect' in methods:
+            raise TypeError('Использование метода connect недопустимо в серверном классе')
+        if not ('SOCK_STREAM' in attributes and 'AF_INET' in attributes):
+            raise TypeError('Некорректная инициализация сокета.')
         super().__init__(clsname, bases, clsdict)
 
 
-'''Metaclass for client validation'''
 class ClientMaker(type):
-    def __init__(self, clsname, base, clsdict):
-        """
+    '''
+     Метакласс, проверяющий что в результирующем классе нет серверных
+    вызовов таких как: accept, listen. Также проверяется, что сокет не
+    создаётся внутри конструктора класса.
+    '''
 
-        :param clsname: metaclass instance - Client
-        :param base: base class tuple - ()
-        :param clsdict: dictionary of attributes and methods of a metaclass instance
-        """
+    def __init__(cls, clsname, bases, clsdict):
         methods = []
         for func in clsdict:
             try:
-                res = dis.get_instructions(clsdict[func])
+                ret = dis.get_instructions(clsdict[func])
             except TypeError:
                 pass
             else:
-                for res_el in res:
-                    if res_el.opname == 'LOAD_GLOBAL':
-                        if res_el.argval not in methods:
-                            methods.append(res_el.argval)
-
+                for i in ret:
+                    if i.opname == 'LOAD_GLOBAL':
+                        if i.argval not in methods:
+                            methods.append(i.argval)
         for command in ('accept', 'listen', 'socket'):
             if command in methods:
-                raise TypeError('The use of a forbidden method was detected in the class')
-
-            if 'get_message' in methods or 'send_message' in methods:
-                pass
-            else:
-                raise TypeError('There are no socket function calls.')
-            super().__init__(clsname, base, clsdict)
+                raise TypeError('В классе обнаружено использование запрещённого метода')
+        if 'get_message' in methods or 'send_message' in methods:
+            pass
+        else:
+            raise TypeError('Отсутствуют вызовы функций, работающих с сокетами.')
+        super().__init__(clsname, bases, clsdict)

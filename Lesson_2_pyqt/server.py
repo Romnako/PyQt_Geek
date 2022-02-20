@@ -1,11 +1,14 @@
 import sys
+import sqlite3
+import dataclasses
 import os
 import argparse
 import logging
 import configparser
 import Lesson_2_pyqt.logs.config_server_log
-from lib.utils import *
-from lib.decoration import log
+from Lesson_2_pyqt.lib.utils import *
+from Lesson_2_pyqt.lib.decoration import log
+from Lesson_2_pyqt.lib.variables import *
 from Lesson_2_pyqt.server.core import MessageProcessor
 from Lesson_2_pyqt.server.server_db import ServerStorage
 from Lesson_2_pyqt.server.server_gui import MainWindow
@@ -15,9 +18,16 @@ from PyQt5.QtCore import Qt
 # Инициализация логирования сервера.
 server_logger = logging.getLogger('server')
 
+
 # Парсер аргументов командной строки.
 @log
 def arg_parser(default_port, default_address):
+    '''
+    Функция парсинга аргументов командной строки:
+    -p 7777 - порт
+    -a 127.0.0.1 - ip адрес с которого принимаются сообщения клиентов. Если не задано - то любой адрес.
+    --no_gui  старт сервера в консольном режиме.
+    '''
     parser = argparse.ArgumentParser()
     parser.add_argument('-p', default=default_port, type=int, nargs='?')
     parser.add_argument('-a', default=default_address, nargs='?')
@@ -30,8 +40,19 @@ def arg_parser(default_port, default_address):
 
 
 def config_load():
+    '''
+    Функция парсинга конфигурационного ini файла: server.ini
+    Файл должен лежать в директории запуска
+    Файл включает в себя секции:
+        [SETTINGS]
+        default_port = 7777
+        listen_address =
+        database_path =
+        database_file = server_database.db3
+    '''
     config = configparser.ConfigParser()
-    dir_path = os.path.dirname(os.path.realpath(__file__))
+    # dir_path = os.path.dirname(os.path.realpath(__file__))
+    dir_path = os.getcwd()
     config.read(f"{dir_path}/{'server.ini'}")
     if 'SETTINGS' in config:
         return config
@@ -45,6 +66,9 @@ def config_load():
 
 
 def start_server():
+    '''
+    Основная функция, запускающая серверную часть.
+    '''
     config = config_load()
     listen_address, listen_port, gui_flag = arg_parser(
         config['SETTINGS']['Default_port'], config['SETTINGS']['Listen_Address'])
@@ -72,6 +96,7 @@ def start_server():
         server_app.exec_()
         # По закрытию окон останавливаем обработчик сообщений
         server.running = False
+
 
 if __name__ == '__main__':
     start_server()
