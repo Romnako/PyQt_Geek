@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
+    <title>Дополнительные модули &#8212; документация Mini Chat 0.0.1</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="Константы" href="vatiable.html" />
+    <link rel="prev" title="Логирование" href="logger.html" />
+
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+
+
+          <div class="body" role="main">
+
+  <section id="id1">
+<h1>Дополнительные модули<a class="headerlink" href="#id1" title="Ссылка на этот заголовок">¶</a></h1>
+<section id="decoration-py">
+<h2>decoration.py<a class="headerlink" href="#decoration-py" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Описан в разделе логирования.</p>
+</section>
+<hr class="docutils" />
+<section id="descryptors-py">
+<h2>descryptors.py<a class="headerlink" href="#descryptors-py" title="Ссылка на этот заголовок">¶</a></h2>
+<p>Добавляет проверку на попытку запуска клиента и сервера с неподходящими параметрами порта и ip-адреса</p>
+</section>
+<hr class="docutils" />
+<section id="errors-py">
+<h2>errors.py<a class="headerlink" href="#errors-py" title="Ссылка на этот заголовок">¶</a></h2>
+<dl class="py class">
+<dt id="lib.errors.ServerError">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lib.errors.</span></code><code class="sig-name descname"><span class="pre">ServerError</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lib.errors.ServerError" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Класс - исключение, для обработки ошибок сервера.
+При генерации требует строку с описанием ошибки,
+полученную с сервера.</p>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="metaclasses-py">
+<h2>metaclasses.py<a class="headerlink" href="#metaclasses-py" title="Ссылка на этот заголовок">¶</a></h2>
+<dl class="py class">
+<dt id="lib.metaclasses.ServerMaker">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lib.metaclasses.</span></code><code class="sig-name descname"><span class="pre">ServerMaker</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clsname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clsdict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lib.metaclasses.ServerMaker" title="Ссылка на это определение">¶</a></dt>
+<dd><p>Метакласс, проверяющий что в результирующем классе нет клиентских
+вызовов таких как: connect. Также проверяется, что серверный
+сокет является TCP и работает по IPv4 протоколу.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="lib.metaclasses.ClientMaker">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">lib.metaclasses.</span></code><code class="sig-name descname"><span class="pre">ClientMaker</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clsname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bases</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clsdict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#lib.metaclasses.ClientMaker" title="Ссылка на это определение">¶</a></dt>
+<dd><blockquote>
+<div><p>Метакласс, проверяющий что в результирующем классе нет серверных</p>
+</div></blockquote>
+<p>вызовов таких как: accept, listen. Также проверяется, что сокет не
+создаётся внутри конструктора класса.</p>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="module-lib.utils.get_message">
+<span id="utils-py"></span><h2>utils.py<a class="headerlink" href="#module-lib.utils.get_message" title="Ссылка на этот заголовок">¶</a></h2>
+<span class="target" id="module-lib.utils.send_message"></span><span class="target" id="module-lib.utils.validate_ip"></span><p>Проверка что строка является действительным адресом IPv4.</p>
+<span class="target" id="module-lib.utils.validate_port"></span><p>Проверка что строка может являться разрешенным портом</p>
+</section>
+<section id="start-scripts-py">
+<h2>start_scripts.py<a class="headerlink" href="#start-scripts-py" title="Ссылка на этот заголовок">¶</a></h2>
+<blockquote>
+<div><p>Служебный скрипт запуска/остановки сервера и нескольких клиентских приложений.</p>
+<p>Служит для быстрого запуска модулей при тестировании / отладки.</p>
+</div></blockquote>
+</section>
+</section>
+
+
+          </div>
+
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Mini Chat</a></h1>
+
+
+
+
+
+
+
+
+<h3>Навигация</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="server.html">Серверная часть</a></li>
+<li class="toctree-l1"><a class="reference internal" href="client.html">Клиентская часть</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logger.html">Логирование</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Дополнительные модули</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#decoration-py">decoration.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#descryptors-py">descryptors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#errors-py">errors.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#metaclasses-py">metaclasses.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-lib.utils.get_message">utils.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#start-scripts-py">start_scripts.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="vatiable.html">Константы</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="logger.html" title="предыдущая глава">Логирование</a></li>
+      <li>Next: <a href="vatiable.html" title="следующая глава">Константы</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Быстрый поиск</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Искать" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Popadin Roman.
+
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0-</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+
+      |
+      <a href="_sources/libs.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+
+
+
+  </body>
+</html>
